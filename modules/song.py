@@ -1,25 +1,28 @@
 #Returns audio
-
-from youtube_search import YoutubeSearch
+from pytube import YouTube
+from pytube import Search
+import validators
 
 #Queues
-queue = {}
-
-def searchYt(srch:str) -> dict:
-    result = YoutubeSearch(srch).to_dict()[0]
-    return {
-        'title': result['title'],
-        'duration': result['duration'],
-        'link': f'https://youtube.com{result["url_suffix"]}'
-        
-    }
+class Queue:
+    def __init__(self, guildId) -> None:
+         self.guildId = guildId
+         self.songs = []
     
-def play(ctx, link) -> None:
-    if ctx.guild in list(queue.keys()): serverQueue = queue[ctx.guild]
-    else:
-        queue[ctx.guild.id] = {
-            'ctx': ctx,
-            'songs': [],
-            'conn': None
+    def __str__(self) -> str:
+         return self.guildId
+async def srchSong(ctx, srch:str) -> dict:
+    if srch.startswith('https://youtube.com/'):
+        pass
+    else: 
+        pass
+
+    song = {
+    'title': title,
+    'duration': duration,
+    'link': link
         }
     
+
+def play(ctx, audio) -> None:
+    pass
