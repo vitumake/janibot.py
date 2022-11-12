@@ -9,7 +9,7 @@ So i decided to make my own bot to get around the ban.
 
 The bot was originally written in javascript which I had never used before. It did work but was incredibly badly written and needed a lot of maintanence.
 
-This project is an effort to make fix most of the problems and maybe be of help :)
+This project is an effort to fix most of the problems and maybe be of help :)
 
 ## Token.txt
 
