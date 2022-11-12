@@ -2,7 +2,7 @@
 
 Yet another discord music bot.
 
-##Why?
+## Why?
 
 Janibot was originally made when the commercial bots lost the ability to stream from youtube.
 So i decided to make my own bot to get around the ban.
@@ -11,6 +11,6 @@ The bot was originally written in javascript which I had never used before. It d
 
 This project is an effort to make fix most of the problems and maybe be of help :)
 
-##Token.txt
+## Token.txt
 
 Make a "token.txt" file in the root folder and add the Token of your bot as the only line.
