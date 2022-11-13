@@ -16,4 +16,4 @@ def fixOpus():
     
     print("Discord - Opus loaded:")
     c = opus.is_loaded()
-    print(c + '\n')
+    print(str(c) + '\n')
