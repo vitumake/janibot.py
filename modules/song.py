@@ -1,5 +1,5 @@
 #Returns audio
-from discord import FFmpegPCMAudio, FFmpegOpusAudio
+from discord import FFmpegOpusAudio
 from youtube_dl import YoutubeDL
 from requests import get
 
@@ -17,44 +17,41 @@ async def playSong(guildQueue:dict):
     source = guildQueue['songs'][0]['url']
     print(f'Playing {guildQueue["songs"][0]["title"]}...')
     await ctx.send(f'Now playing {guildQueue["songs"][0]["title"]}')
+    print(conn)
+    print(source)
     conn.play(FFmpegOpusAudio(source, **FFMPEG_OPTS), after=await playNext(guildQueue))
     
     #ffmpegpcm audio. Doesnt seem to work too well
     #conn.play(FFmpegPCMAudio(source, **FFMPEG_OPTS), after=await playNext(guildQueue))
 
 async def playNext(guildQueue):
-    print('next')
     guildQueue['songs'].pop(0)
     if guildQueue['songs']:
         print('starting play...')
-        print(guildQueue['songs'])
         await initPlay(guildQueue)
     else:
         print('No song qued...')
-        guildQueue.update({'conn':None})
+        await guildQueue['conn'].disconnect()
         await guildQueue['ctx'].send('Nähää bro!')
-        await guildQueue['ctx'].guild.voice_client.disconnect()
+        queue.pop(guildQueue['ctx'].guild.id)
 
 async def initPlay(guildQueue):
-    if guildQueue['conn'] == None:
-        try:
-            conn = await guildQueue['ctx'].author.voice.channel.connect()
-            guildQueue.update({'conn':conn})
-        except:
-            print('Connection error!')
-            return Exception('ConnErr')
-    if not guildQueue['conn'].is_playing():
-        if guildQueue['songs']:
-            await playSong(guildQueue)
+    try:
+        conn = await guildQueue['ctx'].author.voice.channel.connect()
+    except:
+        print('Connection error!')
+        return Exception('ConnErr')
+    guildQueue.update({'conn':conn})
+    await playSong(guildQueue)
+        
 async def addSong(ctx, song:dict):
     if ctx.guild.id not in queue.keys():
         print(f'Creating que for {ctx.guild.name}')
-        queConst = {
+        queue.update({ctx.guild.id:{
             'ctx': ctx,
             'songs': [],
             'conn': None
-        }
-        queue.update({ctx.guild.id:queConst})
+        }})
     else: await ctx.send(f'Added to queue {song["title"]}')
     guildQueue = queue[ctx.guild.id]
     guildQueue['songs'].append(song)
@@ -70,14 +67,19 @@ async def srchSong(ctx, srch:str):
         'preferredquality': '192',
     }]}
     with YoutubeDL(ydl_opts) as ydl:
-        try: get(srch)
-        except: info = ydl.extract_info(f"ytsearch:{srch}", download=False)['entries'][0]
-        else: info = ydl.extract_info(srch, download=False)
-    song = {
-        'title': info['title'],
-        #'duration': info['formats'][0]['duration'],
-        'url': info['formats'][0]['url']
-    }
-    await addSong(ctx, song)
+        try:
+            try: get(srch)
+            except: info = ydl.extract_info(f"ytsearch:{srch}", download=False)['entries'][0]
+            else: info = ydl.extract_info(srch, download=False)
+        
+            song = {
+                'title': info['title'],
+                #'duration': info['formats'][0]['duration'],
+                'url': info['formats'][0]['url']
+            }
+        except Exception as err:
+            print(err)
+            return Exception('Videota ei löytynyt...')
+        await addSong(ctx, song)
     
     

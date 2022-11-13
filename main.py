@@ -18,7 +18,7 @@ try:
     with open('./token.txt', 'r') as file:
         token = [i.rstrip() for i in file]
 except FileNotFoundError:
-    exit('Ei pass.txt tiedostoa. Katso README.md')
+    exit('No token.txt file. See README.md')
 
 class Bot(commands.Bot):
     async def on_ready(self):
@@ -39,8 +39,8 @@ async def play(ctx, *args):
     arg = ' '.join(args)
     try:
         await song.srchSong(ctx, arg)
-    except:
-        await ctx.send('Vituiks meni')
+    except Exception as e:
+        await ctx.send(e)
 
 @Jani.command(aliases=['q', 'Q', 'que', 'Que'])
 async def queue(ctx):
