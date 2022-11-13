@@ -16,11 +16,16 @@ async def playSong(guildQueue:dict):
     source = guildQueue['songs'][0]['url']
     print(f'Playing {guildQueue["songs"][0]["title"]}...')
     await ctx.send(f'Now playing {guildQueue["songs"][0]["title"]}')
-    await conn.play(FFmpegPCMAudio(source, **FFMPEG_OPTS))
-    print('Finished')
-    del guildQueue['songs'][0]
-    await initPlay(guildQueue)
-    
+    conn.play(FFmpegPCMAudio(source, **FFMPEG_OPTS, pipe=True), after=await playNext(guildQueue))
+
+async def playNext(guildQueue):
+    if guildQueue['songs']:
+        del guildQueue['songs'][0]
+        await initPlay(guildQueue)
+    else:
+        guildQueue.update({'conn':None})
+        await guildQueue['ctx'].guild.voice_client.disconnect()
+
 async def initPlay(guildQueue):
     if guildQueue['conn'] == None:
         try:
@@ -32,8 +37,6 @@ async def initPlay(guildQueue):
     if not guildQueue['conn'].is_playing():
         if guildQueue['songs']:
             await playSong(guildQueue)
-        else:
-            await guildQueue['ctx'].guild.voice_client.disconnect()
 async def addSong(ctx, song:dict):
     if ctx.guild.id not in queue.keys():
         print(f'Creating que for {ctx.guild.name}')
@@ -50,7 +53,14 @@ async def addSong(ctx, song:dict):
 
 async def srchSong(ctx, srch:str):
     print(f'Searching for "{srch}"... in "{ctx.guild.name}"')
-    with YoutubeDL({'format': 'bestaudio', 'noplaylist':'True'}) as ydl:
+    ydl_opts = {
+    'format': 'bestaudio/best',
+    'postprocessors': [{
+        'key': 'FFmpegExtractAudio',
+        'preferredcodec': 'mp3',
+        'preferredquality': '192',
+    }]}
+    with YoutubeDL(ydl_opts) as ydl:
         try: get(srch)
         except: info = ydl.extract_info(f"ytsearch:{srch}", download=False)['entries'][0]
         else: info = ydl.extract_info(srch, download=False)
