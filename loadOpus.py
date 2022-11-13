@@ -1,5 +1,4 @@
 from discord import opus
-from sys import platform
 
 import ctypes
 import ctypes.util
@@ -8,9 +7,7 @@ def fixOpus():
     print("Finding opus...")
     a = ctypes.util.find_library('opus')
     if not a:
-        if not platform == 'win32':
-            exit('Opus not found!')
-        else: print('Using windows ignoring...')
+        exit('Opus not found!')
     else: print(a)
     
     print("Discord - Loading opus...:")

@@ -5,8 +5,10 @@ from modules import song
 from modules.log import janiHandler
 from discord.ext import commands
 from loadOpus import fixOpus
+from sys import platform
 
-#fixOpus()
+if not platform == 'win32': fixOpus()
+else: print('Using windows. Skipping opus check...')
 
 try:
     with open('./token.txt', 'r') as file:

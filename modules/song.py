@@ -17,9 +17,8 @@ async def playSong(guildQueue:dict):
     source = guildQueue['songs'][0]['url']
     print(f'Playing {guildQueue["songs"][0]["title"]}...')
     await ctx.send(f'Now playing {guildQueue["songs"][0]["title"]}')
-    
-    conn.play(FFmpegOpusAudio(source, **FFMPEG_OPTS), after=await playNext(guildQueue))
-    
+    conn.play(FFmpegOpusAudio(source, **FFMPEG_OPTS), )#after=await playNext(guildQueue))
+    print('finished')
     #ffmpegpcm audio. Doesnt seem to work too well
     #conn.play(FFmpegPCMAudio(source, **FFMPEG_OPTS), after=await playNext(guildQueue))
 
