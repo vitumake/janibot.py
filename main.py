@@ -21,15 +21,23 @@ intents.message_content = True
 Jani = Bot(command_prefix='!', intents=intents)
 
 @Jani.command()
-async def test(ctx, arg):
+async def test(ctx, *args):
+    arg = ' '.join(args)
     await ctx.send(arg)
 
-@Jani.command(aliases=['p', 'pl'])
-async def play(ctx, arg):
-    reqType = 'link' if validators.url(arg) else 'srch'
-    if ctx.author.voice.channel == 'None':
-        await ctx.send('Et ole kannulla!')
-    else: song.search(ctx, reqType, arg)
-    
+@Jani.command(aliases=['p', 'P'])
+async def play(ctx, *args):
+    arg = ' '.join(args)
+    try:
+        await song.srchSong(ctx, arg)
+    except:
+        await ctx.send('Vituiks meni')
+
+@Jani.command(aliases=['q', 'Q', 'que', 'Que'])
+async def queue(ctx):
+    guildSongs = song.queue[ctx.guild.id]['songs']
+    for i in guildSongs:
+        await ctx.send(f'{i["title"]}')
+        
 #Eskekutse jamppa 8==D
-Jani.run(token, reconnect=True, log_handler=janiHandler)
+Jani.run(token[0], reconnect=True, log_handler=janiHandler)
