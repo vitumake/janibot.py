@@ -10,6 +10,10 @@ from sys import platform
 if not platform == 'win32': fixOpus()
 else: print('Using windows. Skipping opus check...')
 
+print("Discord - Opus loaded:")
+c = discord.opus.is_loaded()
+print(str(c) + '\n')
+
 try:
     with open('./token.txt', 'r') as file:
         token = [i.rstrip() for i in file]

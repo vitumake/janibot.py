@@ -13,7 +13,3 @@ def fixOpus():
     print("Discord - Loading opus...:")
     b = opus.load_opus(a)
     print(b)
-    
-    print("Discord - Opus loaded:")
-    c = opus.is_loaded()
-    print(str(c) + '\n')
