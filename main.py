@@ -46,7 +46,6 @@ async def queue(ctx):
 async def skip(ctx):
     guildQueue = song.queue[ctx.guild.id]
     guildQueue['conn'].stop()
-    await song.playNext(guildQueue)
         
 #Eskekutse jamppa 8==D
 Jani.run(token[0], reconnect=True, log_handler=janiHandler)
