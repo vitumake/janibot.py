@@ -1,5 +1,6 @@
 #Returns audio
-from discord import FFmpegPCMAudio
+import pafy
+from discord import FFmpegPCMAudio, FFmpegOpusAudio
 from youtube_dl import YoutubeDL
 from requests import get
 
@@ -16,11 +17,16 @@ async def playSong(guildQueue:dict):
     source = guildQueue['songs'][0]['url']
     print(f'Playing {guildQueue["songs"][0]["title"]}...')
     await ctx.send(f'Now playing {guildQueue["songs"][0]["title"]}')
-    conn.play(FFmpegPCMAudio(source, **FFMPEG_OPTS, pipe=True), after=await playNext(guildQueue))
+    
+    #Using pafy. Maybe work better :)
+    conn.play(FFmpegOpusAudio(source, pipe=True), after=await playNext(guildQueue))
+    
+    #Old ffmpeg audio. Doesnt seem to work too well
+    #conn.play(FFmpegPCMAudio(source, **FFMPEG_OPTS), after=await playNext(guildQueue))
 
 async def playNext(guildQueue):
     if guildQueue['songs']:
-        del guildQueue['songs'][0]
+        guildQueue['songs'].pop(0)
         await initPlay(guildQueue)
     else:
         guildQueue.update({'conn':None})
