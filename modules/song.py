@@ -18,7 +18,7 @@ async def playSong(guildQueue:dict):
     await ctx.send(f'Now playing {guildQueue["songs"][0]["title"]}')
     
     #Using pafy. Maybe work better :)
-    conn.play(FFmpegOpusAudio(source, pipe=True), after=await playNext(guildQueue))
+    conn.play(FFmpegOpusAudio(source), after=await playNext(guildQueue))
     
     #Old ffmpeg audio. Doesnt seem to work too well
     #conn.play(FFmpegPCMAudio(source, **FFMPEG_OPTS), after=await playNext(guildQueue))
