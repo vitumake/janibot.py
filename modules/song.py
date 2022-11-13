@@ -1,5 +1,4 @@
 #Returns audio
-import pafy
 from discord import FFmpegPCMAudio, FFmpegOpusAudio
 from youtube_dl import YoutubeDL
 from requests import get
