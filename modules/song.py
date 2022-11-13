@@ -24,11 +24,15 @@ async def playSong(guildQueue:dict):
     #conn.play(FFmpegPCMAudio(source, **FFMPEG_OPTS), after=await playNext(guildQueue))
 
 async def playNext(guildQueue):
+    print('next')
     if guildQueue['songs']:
+        print('starting play...')
         guildQueue['songs'].pop(0)
         await initPlay(guildQueue)
     else:
+        print('No song qued...')
         guildQueue.update({'conn':None})
+        await guildQueue['ctx'].send('Nähää bro!')
         await guildQueue['ctx'].guild.voice_client.disconnect()
 
 async def initPlay(guildQueue):
