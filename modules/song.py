@@ -3,8 +3,8 @@ from discord import FFmpegPCMAudio, FFmpegOpusAudio
 from youtube_dl import YoutubeDL
 from requests import get
 
-#Solves some problem. Idk ripped from stackoverflow
-#Actually caused it. NEVER trust strangers kids
+#Solves latter error
+#[tls @ 0x55a7d8228980] The specified session has been invalidated for some reason.
 FFMPEG_OPTS = {'before_options': '-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5', 'options': '-vn'}
 
 
@@ -18,7 +18,7 @@ async def playSong(guildQueue:dict):
     print(f'Playing {guildQueue["songs"][0]["title"]}...')
     await ctx.send(f'Now playing {guildQueue["songs"][0]["title"]}')
     
-    conn.play(FFmpegOpusAudio(source), after=await playNext(guildQueue))
+    conn.play(FFmpegOpusAudio(source, **FFMPEG_OPTS), after=await playNext(guildQueue))
     
     #ffmpegpcm audio. Doesnt seem to work too well
     #conn.play(FFmpegPCMAudio(source, **FFMPEG_OPTS), after=await playNext(guildQueue))
